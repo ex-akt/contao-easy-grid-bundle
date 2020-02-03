@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "contao/core-bundle": "4.5.*",
+        "contao/core-bundle": "4.9.*",
         "erdmannfreunde/euf_grid": "^3.1"
     },
     "conflict": {
