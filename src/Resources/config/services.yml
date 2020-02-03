@@ -7,3 +7,12 @@ services:
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - ["setContainer", ["@service_container"]]
+
+    exakt\EasyGridBundle\EventListener\GeneratePageListener:
+        tags:
+            - {name: contao.hook, hook: generatePage }
+
+    exakt.listener.compile_article:
+        class: exakt\EasyGridBundle\EventListener\CompileArticleListener
+        tags:
+            - {name: contao.hook, hook: compileArticle, priority: 90 }
