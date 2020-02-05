@@ -12,7 +12,11 @@ services:
         tags:
             - {name: contao.hook, hook: generatePage }
 
-    exakt.listener.compile_article:
-        class: exakt\EasyGridBundle\EventListener\CompileArticleListener
+    exakt\EasyGridBundle\EventListener\CompileArticleListener:
         tags:
             - {name: contao.hook, hook: compileArticle, priority: 90 }
+
+    exakt\EasyGridBundle\EventListener\GetContentElementListener:
+        tags:
+            - {name: contao.hook, hook: getContentElement }
+

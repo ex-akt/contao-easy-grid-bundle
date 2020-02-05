@@ -25,7 +25,7 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(ContaoEasyGridBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class]),
+                ->setLoadAfter([ContaoCoreBundle::class,'euf_grid']),
         ];
     }
 }

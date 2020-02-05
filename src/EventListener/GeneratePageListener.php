@@ -12,12 +12,12 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 class GeneratePageListener implements ServiceAnnotationInterface
 {
     /**
-     * 123@Hook("generatePage")
+     * @Hook("generatePage")
      */
     public function onGeneratePage(PageModel $pageModel, LayoutModel $layout, PageRegular $pageRegular): void
     {
         // Do something …
-        dump($pageModel);
-        print_r($pageRegular);
+        //dump($pageModel);
+        //print_r($pageRegular);
     }
 }
