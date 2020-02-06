@@ -8,15 +8,7 @@ services:
             calls:
                 - ["setContainer", ["@service_container"]]
 
-    exakt\EasyGridBundle\EventListener\GeneratePageListener:
-        tags:
-            - {name: contao.hook, hook: generatePage }
-
     exakt\EasyGridBundle\EventListener\CompileArticleListener:
         tags:
             - {name: contao.hook, hook: compileArticle, priority: 90 }
-
-    exakt\EasyGridBundle\EventListener\GetContentElementListener:
-        tags:
-            - {name: contao.hook, hook: getContentElement }
 
