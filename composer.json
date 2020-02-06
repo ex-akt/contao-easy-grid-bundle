@@ -1,8 +1,8 @@
 {
     "name": "ex-akt/contao-easy-grid-bundle",
-    "type": "symfony-bundle",
+    "type": "contao-bundle",
     "description": "Easy grid for Contao",
-    "homepage": "https://contao.org",
+    "homepage": "https://www.ex-akt.de",
     "license": "LGPL-3.0-or-later",
     "authors": [
         {
@@ -10,7 +10,6 @@
             "homepage": "https://github.com/samuelheer"
         }
     ],
-    "minimum-stability": "RC",
     "require": {
         "php": "^7.0",
         "contao/core-bundle": "4.9.*",
@@ -42,10 +41,8 @@
         "exclude-from-classmap": [
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
-            "src/Resources/contao/helper/functions.php",
             "src/Resources/contao/languages/",
-            "src/Resources/contao/templates/",
-            "src/Resources/contao/themes/"
+            "src/Resources/contao/templates/"
         ]
     },
     "autoload-dev": {
