@@ -1,0 +1,8 @@
+# Composer
+/composer.lock
+/node_modules/
+/vendor/
+/.idea/
+
+# PhpUnit
+/phpunit.xml
