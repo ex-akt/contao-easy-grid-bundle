@@ -1,12 +1,17 @@
 <?php
 
-// src/EventListener/GeneratePageListener.php
+/*
+ * This file is part of contao-easy-grid-bundle.
+ * (c) Samuel Heer, ex-akt.de
+ * @license LGPL-3.0-or-later
+ */
+
 namespace exakt\EasyGridBundle\EventListener;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use Contao\PageRegular;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use Contao\PageRegular;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class GeneratePageListener implements ServiceAnnotationInterface

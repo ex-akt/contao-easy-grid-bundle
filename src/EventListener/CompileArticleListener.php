@@ -1,12 +1,17 @@
 <?php
 
-// src/EventListener/CompileArticleListener.php
+/*
+ * This file is part of contao-easy-grid-bundle.
+ * (c) Samuel Heer, ex-akt.de
+ * @license LGPL-3.0-or-later
+ */
+
 namespace exakt\EasyGridBundle\EventListener;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use Contao\Module;
 use Contao\FrontendTemplate;
+use Contao\Module;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class CompileArticleListener implements ServiceAnnotationInterface
@@ -16,7 +21,7 @@ class CompileArticleListener implements ServiceAnnotationInterface
      */
     public function onCompileArticle(FrontendTemplate $template, array $data, Module $module): void
     {
-        if($data['grid_layout']==''){
+        if ('' === $data['grid_layout']) {
             return;
         }
 
@@ -24,10 +29,10 @@ class CompileArticleListener implements ServiceAnnotationInterface
         //Springe raus
 
         $countCte = ContentModel::findBy(
-            array('pid=?','invisible=?','grid_columns is NOT NULL'),
-            array($template->id,'')
+            ['pid=?', 'invisible=?', 'grid_columns is NOT NULL'],
+            [$template->id, '']
         );
-        if($countCte){
+        if ($countCte) {
             return;
         }
 
@@ -39,41 +44,35 @@ class CompileArticleListener implements ServiceAnnotationInterface
             $columnWidth = $countObjects/12;
         }*/
 
-
-        $arrGridClasses = array(
-            '1column'       => 'col-xs-12',
-            '2column_half'  => 'col-md-6',
-            '3column'       => 'col-md-4',
-            '4column'       => 'col-md-3 col-sm-6',
-        );
+        $arrGridClasses = [
+            '1column' => 'col-xs-12',
+            '2column_half' => 'col-md-6',
+            '3column' => 'col-md-4',
+            '4column' => 'col-md-3 col-sm-6',
+        ];
 
         //TODO: Handle Fix Columns
         //Recreation of Article Modules
-        $arrElements = array();
+        $arrElements = [];
         $objCte = ContentModel::findPublishedByPidAndTable($template->id, 'tl_article');
 
-        if ($objCte !== null)
-        {
+        if (null !== $objCte) {
             $intCount = 0;
             $intLast = $objCte->count() - 1;
 
-            while ($objCte->next())
-            {
-                $arrCss = array();
+            while ($objCte->next()) {
+                $arrCss = [];
 
                 /** @var ContentModel $objRow */
                 $objRow = $objCte->current();
 
                 // Add the "first" and "last" classes (see #2583)
-                if ($intCount == 0 || $intCount == $intLast)
-                {
-                    if ($intCount == 0)
-                    {
+                if (0 === $intCount || $intCount === $intLast) {
+                    if (0 === $intCount) {
                         $arrCss[] = 'first';
                     }
 
-                    if ($intCount == $intLast)
-                    {
+                    if ($intCount === $intLast) {
                         $arrCss[] = 'last';
                     }
                 }
@@ -89,11 +88,8 @@ class CompileArticleListener implements ServiceAnnotationInterface
 
         $template->elements = $arrElements;
 
-
         //Verbinder Element Handling (mittels Wrapper oder Element colStart Creation?)
 
         //Vergebe jedem Element entsprechende Klasse nach Konfiguration
-
-
     }
 }

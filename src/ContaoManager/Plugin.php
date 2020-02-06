@@ -1,10 +1,8 @@
 <?php
 
 /*
- * This file is part of [package name].
- *
- * (c) John Doe
- *
+ * This file is part of contao-easy-grid-bundle.
+ * (c) Samuel Heer, ex-akt.de
  * @license LGPL-3.0-or-later
  */
 
@@ -25,7 +23,7 @@ class Plugin implements BundlePluginInterface
     {
         return [
             BundleConfig::create(ContaoEasyGridBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class,'euf_grid']),
+                ->setLoadAfter([ContaoCoreBundle::class, 'euf_grid']),
         ];
     }
 }
