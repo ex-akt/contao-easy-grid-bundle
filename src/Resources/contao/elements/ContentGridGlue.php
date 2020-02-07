@@ -2,8 +2,7 @@
 
 class ContentGridGlue extends ContentElement
 {
-    //protected $strTemplate = 'ce_colStart';
-
+    
     public function compile()
     {
         return;

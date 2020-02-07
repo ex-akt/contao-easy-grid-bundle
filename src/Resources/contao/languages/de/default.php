@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['TL_LANG']['CTE']['grid_glue'] = array('Grid-Verbinder-Element', '');
+$GLOBALS['TL_LANG']['CTE']['grid_glue'] = array('Grid Spalten-Verbinder', 'Verbindet zwei Elemente zu einer Spalte.');
 
 $GLOBALS['TL_LANG']['MSC']['easygrid-layout'] = array(
     'auto'  => 'Automatische Aufteilung',
