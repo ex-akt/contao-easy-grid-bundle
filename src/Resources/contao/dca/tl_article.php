@@ -4,7 +4,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 $GLOBALS['TL_DCA']['tl_article']['fields']['grid_layout'] = array(
     'exclude'          => true,
     'inputType'        => 'select',
-    'options'          => ['1column','2column_half','3column','4column'],
+    'options_callback' => array('exakt\EasyGridBundle\Classes\ExaktEasyGrid','getGridOptions'),
     'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'clr w50'),
     'sql'                     => "varchar(64) NOT NULL default ''"
 );

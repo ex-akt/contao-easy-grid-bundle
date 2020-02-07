@@ -12,6 +12,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendTemplate;
 use Contao\Module;
+use exakt\EasyGridBundle\Classes\ExaktEasyGrid;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 class CompileArticleListener implements ServiceAnnotationInterface
@@ -25,9 +26,7 @@ class CompileArticleListener implements ServiceAnnotationInterface
             return;
         }
 
-        //Call Service: Hat ein Element in diesem Artikel einen Wert im Feld grid_columns?
-        //Springe raus
-
+        //Hat ein Element in diesem Artikel einen Wert im Feld grid_columns?
         $countCte = ContentModel::findBy(
             ['pid=?', 'invisible=?', 'grid_columns is NOT NULL'],
             [$template->id, '']
@@ -36,38 +35,43 @@ class CompileArticleListener implements ServiceAnnotationInterface
             return;
         }
 
-        //Todo: Handle Auto Columns
-        //Count Columns (either Elements or Multiple Elements through Verbinder)
-
-        /*if($data['grid_layout'] == 'auto'){
-            $countObjects = ContentModel::countPublishedByPidAndTable($template->id,'tl_article');
-            $columnWidth = $countObjects/12;
-        }*/
-
-        $arrGridClasses = [
-            '1column' => 'col-xs-12',
-            '2column_half' => 'col-md-6',
-            '3column' => 'col-md-4',
-            '4column' => 'col-md-3 col-sm-6',
-        ];
-
-        //TODO: Handle Fix Columns
         //Recreation of Article Modules
         $arrElements = [];
         $objCte = ContentModel::findPublishedByPidAndTable($template->id, 'tl_article');
 
-        if (null !== $objCte) {
+        if ($objCte !== null) {
+
+            //Handle Auto Columns (1Row)
+            //TODO: Handle also multiple Rows
+            if(strpos($data['grid_layout'],'row') !== false)
+            {
+                $countObjects = $objCte->count();
+                $countTypes = array_count_values($objCte->fetchEach('type'));
+                $columnWidth = 12/($countObjects-2*$countTypes['grid_glue']);
+                $data['grid_layout'] = 'col-md-'.$columnWidth;
+            }
+
+            $easyGridHelper = new ExaktEasyGrid();
+            $arrGridClasses = $easyGridHelper->getGridOptionsFlatArray();
+
             $intCount = 0;
             $intLast = $objCte->count() - 1;
+            $blnColOpened = false;
 
+            $objCte->reset();
             while ($objCte->next()) {
                 $arrCss = [];
 
                 /** @var ContentModel $objRow */
                 $objRow = $objCte->current();
 
+                if($objRow->type == 'grid_glue')
+                {
+                    continue;
+                }
+
                 // Add the "first" and "last" classes (see #2583)
-                if (0 === $intCount || $intCount === $intLast) {
+                if ($intCount === 0 || $intCount === $intLast) {
                     if (0 === $intCount) {
                         $arrCss[] = 'first';
                     }
@@ -79,9 +83,38 @@ class CompileArticleListener implements ServiceAnnotationInterface
 
                 $arrCss[] = $arrGridClasses[$data['grid_layout']];
 
-                $objRow->classes = $arrCss;
+                //Wenn nächstes Element Verbinder ist und kein Grid geöffnet
+                if($objCte[$intCount+1]->type == 'grid_glue'
+                    && $blnColOpened == false)
+                {
+                    $blnColOpened = true;
+                    
+                    $ceColStart = new ContentModel();
+                    $ceColStart->type = 'colStart';
+                    $ceColStart->classes = $arrCss;
+                    $arrElements[] = Module::getContentElement($ceColStart);
+                }
+
+                //Handle Einzelnes Element
+                if($blnColOpened == false)
+                {
+                    $objRow->classes = $arrCss;
+                }
 
                 $arrElements[] = Module::getContentElement($objRow, $this->strColumn);
+
+
+                //Wenn nächstes Element Nicht Verbinder ist und Grid geöffnet
+                if($objCte[$intCount+1]->type != 'grid_glue'
+                    && $blnColOpened)
+                {
+                    $blnColOpened = false;
+
+                    $ceColEnd = new ContentModel();
+                    $ceColEnd->type = 'colEnd';
+                    $arrElements[] = Module::getContentElement($ceColEnd);
+                }
+
                 ++$intCount;
             }
         }
