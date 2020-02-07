@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of contao-easy-grid-bundle.
  * (c) Samuel Heer, ex-akt.de
@@ -21,9 +23,9 @@ class Plugin implements BundlePluginInterface
      */
     public function getBundles(ParserInterface $parser)
     {
-        return [
+        return array(
             BundleConfig::create(ContaoEasyGridBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, 'euf_grid']),
-        ];
+                ->setLoadAfter(array(ContaoCoreBundle::class, 'euf_grid')),
+        );
     }
 }

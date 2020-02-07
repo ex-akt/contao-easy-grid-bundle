@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of contao-easy-grid-bundle.
  * (c) Samuel Heer, ex-akt.de
@@ -28,26 +30,24 @@ class CompileArticleListener implements ServiceAnnotationInterface
 
         //Hat ein Element in diesem Artikel einen Wert im Feld grid_columns?
         $countCte = ContentModel::findBy(
-            ['pid=?', 'invisible=?', 'grid_columns is NOT NULL'],
-            [$template->id, '']
+            array('pid=?', 'invisible=?', 'grid_columns is NOT NULL'),
+            array($template->id, '')
         );
         if ($countCte) {
             return;
         }
 
         //Recreation of Article Modules
-        $arrElements = [];
+        $arrElements = array();
         $objCte = ContentModel::findPublishedByPidAndTable($template->id, 'tl_article');
 
-        if ($objCte !== null) {
-
+        if (null !== $objCte) {
             //Handle Auto Columns (1Row)
             //TODO: Handle also multiple Rows
-            if(strpos($data['grid_layout'],'row') !== false)
-            {
+            if (false !== strpos($data['grid_layout'], 'row')) {
                 $countObjects = $objCte->count();
                 $countTypes = array_count_values($objCte->fetchEach('type'));
-                $columnWidth = 12/($countObjects-2*$countTypes['grid_glue']);
+                $columnWidth = 12 / ($countObjects - 2 * $countTypes['grid_glue']);
                 $data['grid_layout'] = 'col-md-'.$columnWidth;
             }
 
@@ -60,18 +60,17 @@ class CompileArticleListener implements ServiceAnnotationInterface
 
             $objCte->reset();
             while ($objCte->next()) {
-                $arrCss = [];
+                $arrCss = array();
 
                 /** @var ContentModel $objRow */
                 $objRow = $objCte->current();
 
-                if($objRow->type == 'grid_glue')
-                {
+                if ('grid_glue' === $objRow->type) {
                     continue;
                 }
 
                 // Add the "first" and "last" classes (see #2583)
-                if ($intCount === 0 || $intCount === $intLast) {
+                if (0 === $intCount || $intCount === $intLast) {
                     if (0 === $intCount) {
                         $arrCss[] = 'first';
                     }
@@ -84,11 +83,10 @@ class CompileArticleListener implements ServiceAnnotationInterface
                 $arrCss[] = $arrGridClasses[$data['grid_layout']];
 
                 //Wenn nächstes Element Verbinder ist und kein Grid geöffnet
-                if($objCte[$intCount+1]->type == 'grid_glue'
-                    && $blnColOpened == false)
-                {
+                if ('grid_glue' === $objCte[$intCount + 1]->type
+                    && false === $blnColOpened) {
                     $blnColOpened = true;
-                    
+
                     $ceColStart = new ContentModel();
                     $ceColStart->type = 'colStart';
                     $ceColStart->classes = $arrCss;
@@ -96,18 +94,15 @@ class CompileArticleListener implements ServiceAnnotationInterface
                 }
 
                 //Handle Einzelnes Element
-                if($blnColOpened == false)
-                {
+                if (false === $blnColOpened) {
                     $objRow->classes = $arrCss;
                 }
 
                 $arrElements[] = Module::getContentElement($objRow, $this->strColumn);
 
-
                 //Wenn nächstes Element Nicht Verbinder ist und Grid geöffnet
-                if($objCte[$intCount+1]->type != 'grid_glue'
-                    && $blnColOpened)
-                {
+                if ('grid_glue' !== $objCte[$intCount + 1]->type
+                    && $blnColOpened) {
                     $blnColOpened = false;
 
                     $ceColEnd = new ContentModel();

@@ -15,9 +15,11 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        '@PHP70Migration:risky' => true,
         '@PHPUnit60Migration:risky' => true,
         'align_multiline_comment' => true,
-        'array_syntax' => ['syntax' => 'short'],
+        'array_syntax' => ['syntax' => 'long'],
+        'array_indentation' => true,
         'combine_consecutive_issets' => true,
         'combine_consecutive_unsets' => true,
         'compact_nullable_typehint' => true,
